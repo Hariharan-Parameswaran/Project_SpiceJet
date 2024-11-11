@@ -1,7 +1,12 @@
 package tests;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -27,13 +32,30 @@ public class _05_RoundTrip {
 
 	@Test(priority = 5)
 	public void roundTrip() {
-		HomePages hPage = new HomePages(driver);
-		hPage.roundTripDetail("mum", "del");
+		try {
+			HomePages hPage = new HomePages(driver);
+			hPage.roundTripDetail("mum", "del");
 
-		String actualTitle = driver.getTitle();
-		System.out.println(actualTitle);
-		String expectedTitle = "SpiceJet - Flight Booking for Domestic and International, Cheap Air Tickets";
-		Assert.assertEquals(expectedTitle, actualTitle);
+			String actualTitle = driver.getTitle();
+			System.out.println(actualTitle);
+			String expectedTitle = "SpiceJet - Flight Booking for Domestic and International, Cheap Air Tickets";
+			Assert.assertEquals(expectedTitle, actualTitle);
+			takeScreenshot("roundTrip");
+		} catch (Exception e) {
+			takeScreenshot("roundTripfail");
+			e.printStackTrace();
+		}
+	}
+
+	public void takeScreenshot(String fileName) {
+		File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		File destFile = new File("screenshots/" + fileName + ".png");
+		try {
+			FileUtils.copyFile(srcFile, destFile);
+			System.out.println("Screenshot saved: " + destFile.getAbsolutePath());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@AfterClass

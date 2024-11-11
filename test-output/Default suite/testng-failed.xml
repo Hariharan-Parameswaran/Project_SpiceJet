@@ -3,12 +3,13 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="tests.TestCase_2">
+      <class name="tests._02_SignUpSpiceJet">
         <methods>
-          <include name="ValidateSignUpPage"/>
+          <include name="afterC"/>
           <include name="goToWebsite"/>
+          <include name="ValidateSignUpPage"/>
         </methods>
-      </class> <!-- tests.TestCase_2 -->
+      </class> <!-- tests._02_SignUpSpiceJet -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

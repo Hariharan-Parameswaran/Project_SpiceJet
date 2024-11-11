@@ -1,9 +1,14 @@
 package tests;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterClass;
@@ -27,23 +32,40 @@ public class _02_SignUpSpiceJet {
 
 	@Test(priority = 2)
 	public void ValidateSignUpPage() {
+		try {
+			HomePages hPage = new HomePages(driver);
+			hPage.goToSignUp();
 
-		HomePages hPage = new HomePages(driver);
-		hPage.goToSignUp();
+			Set<String> windowHandles = driver.getWindowHandles();
+			Iterator<String> iterator = windowHandles.iterator();
 
-		Set<String> windowHandles = driver.getWindowHandles();
-		Iterator<String> iterator = windowHandles.iterator();
+			String parentWindow = iterator.next();
+			String signUpWindow = iterator.next();
 
-		String parentWindow = iterator.next();
-		String signUpWindow = iterator.next();
+			driver.switchTo().window(signUpWindow);
 
-		driver.switchTo().window(signUpWindow);
+			SignUpPages signPage = new SignUpPages(driver);
+			signPage.signuoDetails("hari", "PS", "05/12/1998", "7871784725", "harifz75811@gmail.com", "x56HxzWr2mq*ASV",
+					"x56HxzWr2mq*ASV");
 
-		SignUpPages signPage = new SignUpPages(driver);
-		signPage.signuoDetails("hari", "PS", "05/12/1998", "7871784725", "harifz75811@gmail.com", "x56HxzWr2mq*ASV",
-				"x56HxzWr2mq*ASV");
+			takeScreenshot("SignUpSpiceJet");
+			driver.switchTo().window(parentWindow);
 
-		driver.switchTo().window(parentWindow);
+		} catch (Exception e) {
+			takeScreenshot("SignUpSpiceJetfail");
+			e.printStackTrace();
+		}
+	}
+
+	public void takeScreenshot(String fileName) {
+		File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		File destFile = new File("screenshots/" + fileName + ".png");
+		try {
+			FileUtils.copyFile(srcFile, destFile);
+			System.out.println("Screenshot saved: " + destFile.getAbsolutePath());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@AfterClass
